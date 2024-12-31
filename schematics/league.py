@@ -6,14 +6,11 @@ class League:
 
     def __init__(self, leagueid):
         self.leagueid = leagueid
-        self.rosterid_to_team_map = {} # Safe because it's by reference so no real extra space needed
+        self._rosterid_to_team_map = {} # Safe because it's by reference so no real extra space needed
         self._teams = []
         self._traded_picks = []
 
-        # Populate teams and rosterid_to_team_map
-        self.teams()
-    
-    def teams(self):
+    def fetch_teams_and_rosterid_map(self):
         # This runs in O(your mom)
         # call into the api here (lazy loading)
         ownerid_to_team_map = {} # mapping to combine data from users and rosters endpoints so we only have to make 2 total calls
@@ -30,9 +27,21 @@ class League:
             team = ownerid_to_team_map[roster['owner_id']]
             team.rosterid = rosterid
             team.players = roster['players']
-            self.rosterid_to_team_map[rosterid] = team
-        
+            self._rosterid_to_team_map[rosterid] = team
+    
+    @property
+    def teams(self):
+        # Lazy loading
+        if self._teams == []:
+            self.fetch_teams_and_rosterid_map()
         return self._teams
+    
+    @property
+    def rosterid_to_team_map(self):
+        # Lazy loading
+        if self._rosterid_to_team_map == {}:
+            self.fetch_teams_and_rosterid_map()
+        return self._rosterid_to_team_map
     
     def print_traded_picks(self):
         traded_picks = requests.get(f"https://api.sleeper.app/v1/league/{self.leagueid}/traded_picks", auth=('user', 'pass')).json()
