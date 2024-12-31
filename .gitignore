@@ -1,2 +1,5 @@
 venv
 *.pyc
+
+# Don't want to include all the player data
+playerdata.json

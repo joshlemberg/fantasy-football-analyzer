@@ -1,3 +1,5 @@
+from .player import Player
+
 class Team:
     def __init__(self, data):
         self.avatar = data.get('avatar')
@@ -35,5 +37,9 @@ class Team:
     
     @players.setter
     def players(self, list):
-        self._players = list
+        new_player_list = []
+        for playerid in list:
+            new_player = Player(playerid)
+            new_player_list.append(new_player)
+        self._players = new_player_list
 
