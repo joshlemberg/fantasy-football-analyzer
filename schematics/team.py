@@ -14,7 +14,7 @@ class Team:
         self._players = []
 
     def __repr__(self):
-        return "\n\nTEAM NAME: {0}\nPlayer List: {1}".format(self.display_name, self.players)
+        return "\n\nTEAM NAME: {0}\nRoster ID: {1}\nPlayer List: {2}".format(self.display_name, self._rosterid, self.players)
     
 
     # Roster ID
